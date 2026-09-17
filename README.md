@@ -25,3 +25,13 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+
+The Fellowship of the Ring | J.R.R. Tolkien | 9780547928210 | 2012 | 18.99 | 20 | Fantasy,Adventure
+The Two Towers | J.R.R. Tolkien | 9780547928203 | 2012 | 18.99 | 17 | Fantasy,Adventure
+The Return of the King | J.R.R. Tolkien | 9780547928197 | 2012 | 18.99 | 15 | Fantasy,Adventure
+Brave New World | Aldous Huxley | 9780060850524 | 2006 | 14.99 | 21 | Dystopian,Science Fiction,Classic
+Fahrenheit 451 | Ray Bradbury | 9781451673319 | 2012 | 13.99 | 19 | Dystopian,Science Fiction,Classic
+Animal Farm | George Orwell | 9780451526342 | 1996 | 9.99 | 28 | Classic,Satire,Fiction
+The Alchemist | Paulo Coelho | 9780061122415 | 2006 | 15.99 | 24 | Fiction,Adventure,Philosophy
+The Little Prince | Antoine de Saint-Exupéry | 9780156012195 | 2000 | 10.99 | 35 | Classic,Fantasy,Children
