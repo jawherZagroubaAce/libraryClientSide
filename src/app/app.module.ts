@@ -1,18 +1,2 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-
-@NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
-})
-export class AppModule { }
+import{NgModule}from'@angular/core';import{BrowserModule}from'@angular/platform-browser';import{BrowserAnimationsModule}from'@angular/platform-browser/animations';import{FormsModule,ReactiveFormsModule}from'@angular/forms';import{HTTP_INTERCEPTORS,HttpClientModule}from'@angular/common/http';import{MatButtonModule}from'@angular/material/button';import{MatCheckboxModule}from'@angular/material/checkbox';import{MatFormFieldModule}from'@angular/material/form-field';import{MatIconModule}from'@angular/material/icon';import{MatInputModule}from'@angular/material/input';import{MatSnackBarModule}from'@angular/material/snack-bar';import{MatTableModule}from'@angular/material/table';import{AppRoutingModule}from'./app-routing.module';import{AppComponent}from'./app.component';import{LibraryComponent}from'./pages/library/library.component';import{LibrarySummaryComponent}from'./components/library-summary/library-summary.component';import{BookSearchPipe}from'./pipes/book-search.pipe';import{ApiInterceptor}from'./interceptors/api.interceptor';
+@NgModule({declarations:[AppComponent,LibraryComponent,LibrarySummaryComponent,BookSearchPipe],imports:[BrowserModule,BrowserAnimationsModule,FormsModule,ReactiveFormsModule,HttpClientModule,AppRoutingModule,MatButtonModule,MatCheckboxModule,MatFormFieldModule,MatIconModule,MatInputModule,MatSnackBarModule,MatTableModule],providers:[{provide:HTTP_INTERCEPTORS,useClass:ApiInterceptor,multi:true}],bootstrap:[AppComponent]})export class AppModule{}
