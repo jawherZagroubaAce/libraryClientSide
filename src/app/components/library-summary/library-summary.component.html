@@ -1,1 +1,12 @@
-<section class="hero"><div><span>YOUR CURATED COLLECTION</span><h1>Stories worth keeping.</h1><p>Manage every title, author and category from one calm workspace.</p><button mat-flat-button color="accent" (click)="addRequested.emit()"><mat-icon>add</mat-icon>Add a book</button></div><aside><div><b>{{books.length}}</b>Titles</div><div><b>{{authors}}</b>Authors</div><div><b>{{copies}}</b>In stock</div></aside></section>
+<section class="hero">
+    <div><span>YOUR CURATED COLLECTION</span>
+        <h1>Stories worth keeping.</h1>
+        <p>Manage every title, author and category from one calm workspace.</p><button mat-flat-button color="accent"
+            (click)="addRequested.emit()"><mat-icon>add</mat-icon>Add a book</button>
+    </div>
+    <aside>
+        <div><b>{{books.length}}</b>Titles</div>
+        <div><b>{{authors}}</b>Authors</div>
+        <div><b>{{copies}}</b>In stock</div>
+    </aside>
+</section>

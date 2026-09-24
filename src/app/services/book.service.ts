@@ -1,2 +1,43 @@
-import{Injectable}from'@angular/core';import{HttpClient}from'@angular/common/http';import{BehaviorSubject,Observable,tap}from'rxjs';import{Book,BookRequest}from'../models/book';
-@Injectable({providedIn:'root'})export class BookService{private api='https://localhost:44354/api/books';private state=new BehaviorSubject<Book[]>([]);books$=this.state.asObservable();constructor(private http:HttpClient){}getAll(){return this.http.get<Book[]>(this.api).pipe(tap(x=>this.state.next(x)))}setInitialBooks(x:Book[]){this.state.next(x)}refresh(){this.getAll().subscribe()}create(x:BookRequest){return this.http.post<Book>(this.api,x).pipe(tap(()=>this.refresh()))}createMany(x:BookRequest[]){return this.http.post<Book[]>(`${this.api}/bulk`,x).pipe(tap(()=>this.refresh()))}update(id:string,x:BookRequest){return this.http.put<Book>(`${this.api}/${id}`,x).pipe(tap(()=>this.refresh()))}delete(id:string){return this.http.delete<void>(`${this.api}/${id}`).pipe(tap(()=>this.refresh()))}deleteMany(ids:string[]){return this.http.post<{deleted:number}>(`${this.api}/bulk-delete`,{ids}).pipe(tap(()=>this.refresh()))}}
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Book, BookRequest } from '../models/book';
+@Injectable({ providedIn: 'root' })
+export class BookService {
+  private api = 'https://localhost:44354/api/books';
+  private state = new BehaviorSubject<Book[]>([]);
+  books$ = this.state.asObservable();
+  constructor(private http: HttpClient) {}
+  getAll() {
+    return this.http.get<Book[]>(this.api).pipe(tap((x) => this.state.next(x)));
+  }
+  setInitialBooks(x: Book[]) {
+    this.state.next(x);
+  }
+  refresh() {
+    this.getAll().subscribe();
+  }
+  create(x: BookRequest) {
+    return this.http.post<Book>(this.api, x).pipe(tap(() => this.refresh()));
+  }
+  createMany(x: BookRequest[]) {
+    return this.http
+      .post<Book[]>(`${this.api}/bulk`, x)
+      .pipe(tap(() => this.refresh()));
+  }
+  update(id: string, x: BookRequest) {
+    return this.http
+      .put<Book>(`${this.api}/${id}`, x)
+      .pipe(tap(() => this.refresh()));
+  }
+  delete(id: string) {
+    return this.http
+      .delete<void>(`${this.api}/${id}`)
+      .pipe(tap(() => this.refresh()));
+  }
+  deleteMany(ids: string[]) {
+    return this.http
+      .post<{ deleted: number }>(`${this.api}/bulk-delete`, { ids })
+      .pipe(tap(() => this.refresh()));
+  }
+}

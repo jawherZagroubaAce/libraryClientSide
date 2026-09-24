@@ -1,2 +1,146 @@
-import{Component,OnInit}from'@angular/core';import{FormBuilder,Validators}from'@angular/forms';import{ActivatedRoute}from'@angular/router';import{MatSnackBar}from'@angular/material/snack-bar';import{Book,BookRequest}from'../../models/book';import{BookService}from'../../services/book.service';
-@Component({selector:'app-library',templateUrl:'./library.component.html',styleUrls:['./library.component.scss']})export class LibraryComponent implements OnInit{books$=this.books.books$;columns=['select','book','categories','publishedYear','stock','price','actions'];selected=new Set<string>();search='';editingId:string|null=null;showEditor=false;bulkText='';form=this.fb.nonNullable.group({title:['',Validators.required],author:['',Validators.required],isbn:['',Validators.required],publishedYear:[new Date().getFullYear(),[Validators.required,Validators.min(1000)]],stock:[1,[Validators.required,Validators.min(0)]],price:[0,[Validators.required,Validators.min(0)]],categories:['',Validators.required]});constructor(private fb:FormBuilder,private books:BookService,private route:ActivatedRoute,private snack:MatSnackBar){}ngOnInit(){this.books.setInitialBooks(this.route.snapshot.data['books'])}openAdd(){this.editingId=null;this.form.reset({title:'',author:'',isbn:'',publishedYear:new Date().getFullYear(),stock:1,price:0,categories:''});this.showEditor=true}edit(b:Book){this.editingId=b.id;this.form.setValue({title:b.title,author:b.author.name,isbn:b.isbn,publishedYear:b.publishedYear,stock:b.stock,price:b.price,categories:b.categories.map(c=>c.name).join(', ')});this.showEditor=true}save(){if(this.form.invalid){this.form.markAllAsTouched();return}const v=this.form.getRawValue(),r:BookRequest={...v,categories:v.categories.split(',').map(x=>x.trim()).filter(Boolean)},action=this.editingId?this.books.update(this.editingId,r):this.books.create(r);action.subscribe(()=>{this.showEditor=false;this.snack.open(this.editingId?'Book updated':'Book added','Close',{duration:2500})})}remove(b:Book){if(confirm(`Delete “${b.title}”?`))this.books.delete(b.id).subscribe(()=>this.selected.delete(b.id))}toggle(id:string){this.selected.has(id)?this.selected.delete(id):this.selected.add(id)}deleteSelected(){const ids=[...this.selected];if(ids.length&&confirm(`Delete ${ids.length} selected books?`))this.books.deleteMany(ids).subscribe(r=>{this.selected.clear();this.snack.open(`${r.deleted} books deleted`,'Close',{duration:2500})})}addBulk(){try{const rows=this.bulkText.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).map(line=>{const[t,a,i,y,p,s,c]=line.split('|').map(x=>x.trim());if(!t||!a||!i||!y||!p||!s||!c)throw Error('Each row needs all 7 fields.');return{title:t,author:a,isbn:i,publishedYear:+y,price:+p,stock:+s,categories:c.split(',').map(x=>x.trim())}});if(!rows.length)throw Error('Add at least one row.');this.books.createMany(rows).subscribe(()=>{this.bulkText='';this.snack.open(`${rows.length} books added`,'Close',{duration:2500})})}catch(e){this.snack.open((e as Error).message,'Close',{duration:3500})}}}
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, Validators } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { Book, BookRequest } from "../../models/book";
+import { BookService } from "../../services/book.service";
+@Component({
+  selector: "app-library",
+  templateUrl: "./library.component.html",
+  styleUrls: ["./library.component.scss"],
+})
+export class LibraryComponent implements OnInit {
+  books$ = this.books.books$;
+  columns = [
+    "select",
+    "book",
+    "categories",
+    "publishedYear",
+    "stock",
+    "price",
+    "actions",
+  ];
+  selected = new Set<string>();
+  search = "";
+  editingId: string | null = null;
+  showEditor = false;
+  bulkText = "";
+  form = this.fb.nonNullable.group({
+    title: ["", Validators.required],
+    author: ["", Validators.required],
+    isbn: ["", Validators.required],
+    publishedYear: [
+      new Date().getFullYear(),
+      [Validators.required, Validators.min(1000)],
+    ],
+    stock: [1, [Validators.required, Validators.min(0)]],
+    price: [0, [Validators.required, Validators.min(0)]],
+    categories: ["", Validators.required],
+  });
+  constructor(
+    private fb: FormBuilder,
+    private books: BookService,
+    private route: ActivatedRoute,
+    private snack: MatSnackBar,
+  ) {}
+  ngOnInit() {
+    this.books.setInitialBooks(this.route.snapshot.data["books"]);
+  }
+  openAdd() {
+    this.editingId = null;
+    this.form.reset({
+      title: "",
+      author: "",
+      isbn: "",
+      publishedYear: new Date().getFullYear(),
+      stock: 1,
+      price: 0,
+      categories: "",
+    });
+    this.showEditor = true;
+  }
+  edit(b: Book) {
+    this.editingId = b.id;
+    this.form.setValue({
+      title: b.title,
+      author: b.author.name,
+      isbn: b.isbn,
+      publishedYear: b.publishedYear,
+      stock: b.stock,
+      price: b.price,
+      categories: b.categories.map((c) => c.name).join(", "),
+    });
+    this.showEditor = true;
+  }
+  save() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const v = this.form.getRawValue(),
+      r: BookRequest = {
+        ...v,
+        categories: v.categories
+          .split(",")
+          .map((x) => x.trim())
+          .filter(Boolean),
+      },
+      action = this.editingId
+        ? this.books.update(this.editingId, r)
+        : this.books.create(r);
+    action.subscribe(() => {
+      this.showEditor = false;
+      this.snack.open(this.editingId ? "Book updated" : "Book added", "Close", {
+        duration: 2500,
+      });
+    });
+  }
+  remove(b: Book) {
+    if (confirm(`Delete “${b.title}”?`))
+      this.books.delete(b.id).subscribe(() => this.selected.delete(b.id));
+  }
+  toggle(id: string) {
+    this.selected.has(id) ? this.selected.delete(id) : this.selected.add(id);
+  }
+  deleteSelected() {
+    const ids = [...this.selected];
+    if (ids.length && confirm(`Delete ${ids.length} selected books?`))
+      this.books.deleteMany(ids).subscribe((r) => {
+        this.selected.clear();
+        this.snack.open(`${r.deleted} books deleted`, "Close", {
+          duration: 2500,
+        });
+      });
+  }
+  addBulk() {
+    try {
+      const rows = this.bulkText
+        .split(/\r?\n/)
+        .map((x) => x.trim())
+        .filter(Boolean)
+        .map((line) => {
+          const [t, a, i, y, p, s, c] = line.split("|").map((x) => x.trim());
+          if (!t || !a || !i || !y || !p || !s || !c)
+            throw Error("Each row needs all 7 fields.");
+          return {
+            title: t,
+            author: a,
+            isbn: i,
+            publishedYear: +y,
+            price: +p,
+            stock: +s,
+            categories: c.split(",").map((x) => x.trim()),
+          };
+        });
+      if (!rows.length) throw Error("Add at least one row.");
+      this.books.createMany(rows).subscribe(() => {
+        this.bulkText = "";
+        this.snack.open(`${rows.length} books added`, "Close", {
+          duration: 2500,
+        });
+      });
+    } catch (e) {
+      this.snack.open((e as Error).message, "Close", { duration: 3500 });
+    }
+  }
+}

@@ -1,1 +1,6 @@
-import{Injectable}from'@angular/core';import{BehaviorSubject}from'rxjs';@Injectable({providedIn:'root'})export class LibraryAccessService{canManage$=new BehaviorSubject(true)}
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+@Injectable({ providedIn: 'root' })
+export class LibraryAccessService {
+  canManage$ = new BehaviorSubject(true);
+}
